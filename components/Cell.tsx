@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useStateContext } from "../context/StateContextProvider";
 type Props = {
   content?: number;
 };
@@ -21,10 +23,37 @@ const Cell: React.FC<Props> = ({ content }) => {
   } else if (content === 8) {
     contentStyle = "text-stone-700";
   }
+  const { flagMode } = useStateContext();
+  const [isOpen, setIsOpen] = useState(false);
+  const [flag, setFlag] = useState(false);
+
+  const handleClickCell = () => {
+    if (flagMode) {
+      setFlag(!flag);
+    } else {
+      if (!flag) {
+        setIsOpen(true);
+      } else {
+        setFlag(false);
+      }
+    }
+  };
 
   return (
-    <div className="w-7 h-7 bg-gray-300 box-border border-2 border-l-gray-50 border-t-gray-50 border-r-gray-600 border-b-gray-600">
-      <div className={`flex justify-center items-center font-black`}>
+    <div
+      className={`w-11 h-11 text-3xl ${
+        isOpen
+          ? "bg-gray-400 border-gray-600 border"
+          : "bg-gray-300 border-4 border-l-gray-50 border-t-gray-50 border-r-gray-600 border-b-gray-600"
+      }`}
+      onClick={handleClickCell}
+    >
+      <div className={`${flag ? "flex justify-center items-center" : "hidden"}`}>🚩</div>
+      <div
+        className={`w-full h-full ${
+          isOpen ? "flex justify-center items-center" : "hidden"
+        } font-black`}
+      >
         {(() => {
           if (content === 0) {
             return <div></div>;
