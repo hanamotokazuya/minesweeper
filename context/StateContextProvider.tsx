@@ -1,6 +1,5 @@
 import { useContext, useState, createContext, SetStateAction } from "react";
-
-type Level = "Easy" | "Normal" | "Hard";
+import { Level } from "../types/state";
 
 interface Props {
   children: React.ReactNode;
