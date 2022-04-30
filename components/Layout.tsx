@@ -9,7 +9,7 @@ const Layout: React.FC<Props> = ({ children }) => {
       <Head>
         <title>Mine Sweeper</title>
       </Head>
-      <main className="w-screen h-screen bg-gray-800 flex flex-col items-center">{children}</main>
+      <main className="flex flex-col items-center">{children}</main>
     </>
   );
 };
