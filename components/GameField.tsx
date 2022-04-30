@@ -4,8 +4,10 @@ import { Level } from "../types/state";
 import { randomIntArrayNoDuplication } from "../lib/utils";
 
 const GameField: React.FC = () => {
-  const { level } = useStateContext();
-  const { cells } = initializeField(level);
+  const {
+    state: { level, gameField },
+  } = useStateContext();
+  const cells = gameField.cells;
   let gridPattern = "grid-cols-9";
   if (level === "Easy") gridPattern = "grid-cols-9";
   if (level === "Normal") gridPattern = "grid-cols-16";

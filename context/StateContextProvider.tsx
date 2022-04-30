@@ -1,5 +1,6 @@
-import { useContext, useState, createContext, SetStateAction } from "react";
-import { Level } from "../types/state";
+import { useContext, useState, createContext, SetStateAction, useReducer } from "react";
+import { Level, Cell, GameField, State, Action } from "../types/state";
+import { randomIntArrayNoDuplication } from "../lib/utils";
 
 interface Props {
   children: React.ReactNode;
@@ -7,21 +8,88 @@ interface Props {
 
 const StateContext = createContext(
   {} as {
-    level: Level;
-    flagMode: boolean;
-    setLevel: React.Dispatch<SetStateAction<Level>>;
-    setFlagMode: React.Dispatch<SetStateAction<boolean>>;
+    state: State;
+    action: React.Dispatch<Action>;
   }
 );
 
 export const StateContextProvider: React.FC<Props> = ({ children }) => {
+  const events = (state: State, action: Action): State => {
+    switch (action.type) {
+      case "CHANGE_LEVEL_EVENT":
+        return { ...state, level: action.level };
+      case "REFLESH_GAME_FIELD_EVENT":
+        return { ...state, gameField: initializeField(state.level) };
+      case "SWITCH_FLAG_MODE_EVENT":
+        return { ...state, flagMode: !state.flagMode };
+      default:
+        return state;
+    }
+  };
+  const initialState: State = {
+    level: "Easy",
+    flagMode: false,
+    gameField: initializeField("Easy"),
+  };
+  const [state, action] = useReducer(events, initialState);
   const [level, setLevel] = useState<Level>("Easy");
   const [flagMode, setFlagMode] = useState<boolean>(false);
-  return (
-    <StateContext.Provider value={{ level, flagMode, setLevel, setFlagMode }}>
-      {children}
-    </StateContext.Provider>
-  );
+  return <StateContext.Provider value={{ state, action }}>{children}</StateContext.Provider>;
 };
 
 export const useStateContext = () => useContext(StateContext);
+
+const initializeField = (level: Level): GameField => {
+  let rows: number;
+  let mines: number;
+  switch (level) {
+    case "Easy":
+      rows = 9;
+      mines = 10;
+      break;
+    case "Normal":
+      rows = 16;
+      mines = 40;
+      break;
+    case "Hard":
+      rows = 32;
+      mines = 199;
+      break;
+    default:
+      rows = 9;
+      mines = 10;
+  }
+  const numOfCells = rows * rows;
+  let cells = new Array<Cell>(numOfCells).fill(0);
+  const minesPosition = randomIntArrayNoDuplication(numOfCells, mines);
+  minesPosition.forEach((pos) => {
+    let row = Math.floor(pos / rows);
+    let col = pos % rows;
+    cells[pos] = -1;
+    if (col !== 0 && cells[pos - 1] !== -1) {
+      cells[pos - 1] += 1;
+    }
+    if (col !== rows - 1 && cells[pos + 1] !== -1) {
+      cells[pos + 1] += 1;
+    }
+    if (row !== 0 && cells[pos - rows] !== -1) {
+      cells[pos - rows] += 1;
+    }
+    if (row !== 0 && col !== 0 && cells[pos - rows - 1] !== -1) {
+      cells[pos - rows - 1] += 1;
+    }
+    if (row !== 0 && col !== rows - 1 && cells[pos - rows + 1] !== -1) {
+      cells[pos - rows + 1] += 1;
+    }
+    if (row !== rows - 1 && cells[pos + rows] !== -1) {
+      cells[pos + rows] += 1;
+    }
+    if (row !== rows - 1 && col !== 0 && cells[pos + rows - 1] !== -1) {
+      cells[pos + rows - 1] += 1;
+    }
+    if (row !== rows - 1 && col !== rows - 1 && cells[pos + rows + 1] !== -1) {
+      cells[pos + rows + 1] += 1;
+    }
+  });
+  return { numOfCells, rows, mines, cells };
+};

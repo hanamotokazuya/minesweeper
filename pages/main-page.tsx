@@ -5,7 +5,10 @@ import GameField from "../components/GameField";
 import { useStateContext } from "../context/StateContextProvider";
 
 const MainPage: React.FC = () => {
-  const { flagMode, setFlagMode } = useStateContext();
+  const {
+    state: { flagMode },
+    action,
+  } = useStateContext();
   return (
     <Layout>
       <div className="fixed top-0 left-0 bg-gray-500 p-4 flex justify-between items-center w-full h-12">
@@ -27,7 +30,7 @@ const MainPage: React.FC = () => {
               ? "bg-gray-400 border-gray-600 border"
               : "bg-gray-300 border-4 border-l-gray-50 border-t-gray-50 border-r-gray-600 border-b-gray-600"
           }`}
-          onClick={() => setFlagMode(!flagMode)}
+          onClick={() => action({ type: "SWITCH_FLAG_MODE_EVENT" })}
         >
           🚩
         </div>

@@ -23,7 +23,9 @@ const Cell: React.FC<Props> = ({ content }) => {
   } else if (content === 8) {
     contentStyle = "text-stone-700";
   }
-  const { flagMode } = useStateContext();
+  const {
+    state: { flagMode },
+  } = useStateContext();
   const [isOpen, setIsOpen] = useState(false);
   const [flag, setFlag] = useState(false);
 
