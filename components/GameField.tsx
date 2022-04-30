@@ -6,13 +6,13 @@ import { randomIntArrayNoDuplication } from "../lib/utils";
 const GameField: React.FC = () => {
   const { level } = useStateContext();
   const { cells } = initializeField(level);
-  let hoge = "grid-cols-9";
-  if (level === "Easy") hoge = "grid-cols-9";
-  if (level === "Normal") hoge = "grid-cols-16";
-  if (level === "Hard") hoge = "grid-cols-32";
+  let gridPattern = "grid-cols-9";
+  if (level === "Easy") gridPattern = "grid-cols-9";
+  if (level === "Normal") gridPattern = "grid-cols-16";
+  if (level === "Hard") gridPattern = "grid-cols-32";
 
   return (
-    <div className={`grid ${hoge} translate-y-12 mt-1`}>
+    <div className={`grid ${gridPattern} mt-1`}>
       {cells.map((cell, key) => (
         <Cell key={key} content={cell} />
       ))}
