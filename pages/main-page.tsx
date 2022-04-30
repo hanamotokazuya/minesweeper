@@ -2,8 +2,10 @@ import Layout from "../components/Layout";
 import Link from "next/link";
 import Cell from "../components/Cell";
 import GameField from "../components/GameField";
+import { useStateContext } from "../context/StateContextProvider";
 
 const MainPage: React.FC = () => {
+  const { flagMode, setFlagMode } = useStateContext();
   return (
     <Layout>
       <div className="fixed top-0 left-0 bg-gray-500 p-4 flex justify-between items-center w-full h-12">
@@ -19,12 +21,20 @@ const MainPage: React.FC = () => {
             <span className="text-red-500">10</span>
           </div>
         </div>
-        <div className="flex gap-1">
-          <Cell />
-          <Cell />
+        <div
+          className={`w-11 h-11 text-3xl flex justify-center items-center ${
+            flagMode
+              ? "bg-gray-400 border-gray-600 border"
+              : "bg-gray-300 border-4 border-l-gray-50 border-t-gray-50 border-r-gray-600 border-b-gray-600"
+          }`}
+          onClick={() => setFlagMode(!flagMode)}
+        >
+          🚩
         </div>
       </div>
-      <GameField />
+      <div className="pt-20 pb-4">
+        <GameField />
+      </div>
     </Layout>
   );
 };
