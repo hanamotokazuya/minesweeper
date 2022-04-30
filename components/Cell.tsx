@@ -30,7 +30,7 @@ const Cell: React.FC<Props> = ({ content }) => {
   const [flag, setFlag] = useState(false);
 
   const handleClickCell = () => {
-    if (flagMode) {
+    if (!isOpen && flagMode) {
       setFlag(!flag);
     } else {
       if (!flag) {
