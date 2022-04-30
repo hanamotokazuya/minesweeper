@@ -20,12 +20,16 @@ const MainPage: React.FC = () => {
           <a className="text-2xl text-green-400 font-bold">Menu</a>
         </Link>
         <div className="flex gap-2">
-          <div className="bg-black flex items-center px-1 h-7">
-            <span className="text-red-500">{mines - countFlag}</span>
+          <div className="bg-black flex justify-center items-center w-16 h-11">
+            <span className="text-red-500 text-2xl">
+              {String(mines - countFlag).padStart(3, "0")}
+            </span>
           </div>
           <Cell />
-          <div className="bg-black flex items-center px-1 h-7">
-            <span className="text-red-500">10</span>
+          <div className="bg-black flex justify-center items-center w-16 h-11">
+            <span className="text-red-500 text-2xl">
+              {String(mines - countFlag).padStart(4, "0")}
+            </span>
           </div>
         </div>
         <div
