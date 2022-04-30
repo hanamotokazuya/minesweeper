@@ -24,19 +24,31 @@ const Cell: React.FC<Props> = ({ content }) => {
     contentStyle = "text-stone-700";
   }
   const {
-    state: { flagMode },
+    state: {
+      flagMode,
+      countFlag,
+      gameField: { mines },
+    },
+    action,
   } = useStateContext();
   const [isOpen, setIsOpen] = useState(false);
   const [flag, setFlag] = useState(false);
 
   const handleClickCell = () => {
-    if (!isOpen && flagMode) {
-      setFlag(!flag);
-    } else {
-      if (!flag) {
-        setIsOpen(true);
-      } else {
+    if (flagMode) {
+      if (!isOpen && !flag && countFlag < mines) {
+        setFlag(true);
+        action({ type: "COUNT_FLAG_EVENT", flag: true });
+      } else if (flag) {
         setFlag(false);
+        action({ type: "COUNT_FLAG_EVENT", flag: false });
+      }
+    } else {
+      if (flag) {
+        setFlag(false);
+        action({ type: "COUNT_FLAG_EVENT", flag: false });
+      } else if (!isOpen) {
+        setIsOpen(true);
       }
     }
   };

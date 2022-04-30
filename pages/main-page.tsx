@@ -6,7 +6,11 @@ import { useStateContext } from "../context/StateContextProvider";
 
 const MainPage: React.FC = () => {
   const {
-    state: { flagMode },
+    state: {
+      flagMode,
+      countFlag,
+      gameField: { mines },
+    },
     action,
   } = useStateContext();
   return (
@@ -17,7 +21,7 @@ const MainPage: React.FC = () => {
         </Link>
         <div className="flex gap-2">
           <div className="bg-black flex items-center px-1 h-7">
-            <span className="text-red-500">10</span>
+            <span className="text-red-500">{mines - countFlag}</span>
           </div>
           <Cell />
           <div className="bg-black flex items-center px-1 h-7">

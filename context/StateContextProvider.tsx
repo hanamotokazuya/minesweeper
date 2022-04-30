@@ -15,13 +15,18 @@ const StateContext = createContext(
 
 export const StateContextProvider: React.FC<Props> = ({ children }) => {
   const events = (state: State, action: Action): State => {
+    let countFlag = state.countFlag;
     switch (action.type) {
       case "CHANGE_LEVEL_EVENT":
         return { ...state, level: action.level };
       case "REFLESH_GAME_FIELD_EVENT":
-        return { ...state, gameField: initializeField(state.level) };
+        return { ...state, gameField: initializeField(state.level), countFlag: 0, flagMode: false };
       case "SWITCH_FLAG_MODE_EVENT":
         return { ...state, flagMode: !state.flagMode };
+      case "COUNT_FLAG_EVENT":
+        const flag = action.flag ? 1 : -1;
+        countFlag += flag;
+        return { ...state, countFlag };
       default:
         return state;
     }
@@ -30,10 +35,9 @@ export const StateContextProvider: React.FC<Props> = ({ children }) => {
     level: "Easy",
     flagMode: false,
     gameField: initializeField("Easy"),
+    countFlag: 0,
   };
   const [state, action] = useReducer(events, initialState);
-  const [level, setLevel] = useState<Level>("Easy");
-  const [flagMode, setFlagMode] = useState<boolean>(false);
   return <StateContext.Provider value={{ state, action }}>{children}</StateContext.Provider>;
 };
 

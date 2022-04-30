@@ -13,8 +13,13 @@ export type State = {
   level: Level;
   flagMode: boolean;
   gameField: GameField;
+  countFlag: number;
 };
-export type Action = CHANGE_LEVEL_EVENT | SWTICH_FLAG_MODE_EVENT | REFLESH_GAME_FIELD_EVENT;
+export type Action =
+  | CHANGE_LEVEL_EVENT
+  | SWTICH_FLAG_MODE_EVENT
+  | REFLESH_GAME_FIELD_EVENT
+  | COUNT_FLAG_EVENT;
 
 type CHANGE_LEVEL_EVENT = {
   type: "CHANGE_LEVEL_EVENT";
@@ -25,4 +30,8 @@ type SWTICH_FLAG_MODE_EVENT = {
 };
 type REFLESH_GAME_FIELD_EVENT = {
   type: "REFLESH_GAME_FIELD_EVENT";
+};
+type COUNT_FLAG_EVENT = {
+  type: "COUNT_FLAG_EVENT";
+  flag: boolean;
 };
