@@ -42,7 +42,7 @@ const MainPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="fixed top-0 left-0 bg-gray-500 p-4 flex justify-between items-center w-full h-12">
+      <div className="fixed top-0 left-0 bg-gray-500 p-4 flex justify-between items-center w-full h-12 z-10">
         <Link href="/">
           <a className="text-2xl text-green-400 font-bold">Menu</a>
         </Link>
