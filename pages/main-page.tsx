@@ -5,6 +5,7 @@ import { useStateContext } from "../context/StateContextProvider";
 import Result from "../components/Result";
 import { useEffect } from "react";
 import { useInterval } from "../lib/useInterval";
+import { useHotkeys } from "react-hotkeys-hook";
 
 const MainPage: React.FC = () => {
   const {
@@ -18,6 +19,8 @@ const MainPage: React.FC = () => {
     },
     action,
   } = useStateContext();
+  useHotkeys("a", () => action({ type: "SWITCH_FLAG_MODE_EVENT" }));
+  useHotkeys("ctrl+c", () => action({ type: "REFLESH_GAME_EVENT" }));
   const [timerState, timerControl] = useInterval({
     interval: 1000,
     autostart: false,
