@@ -1,5 +1,5 @@
 import { useContext, createContext, useReducer } from "react";
-import { Level, Cell, GameField, State, Action, CellState } from "../types/state";
+import { Level, Cell, GameField, State, Action } from "../types/state";
 import { randomIntArrayNoDuplication } from "../lib/utils";
 import _ from "lodash";
 
