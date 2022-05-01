@@ -51,6 +51,17 @@ export const StateContextProvider: React.FC<Props> = ({ children }) => {
         }
         gameField.cells[action.idx].state = newCellState;
         return { ...state, gameField, countFlag, remainingCells };
+      case "OPEN_SURROUNDING_CELLS_EVENT":
+        gameField = _.cloneDeep(state.gameField);
+        const openCellIdx = searchOpenSurroundingCells(gameField.cells, gameField.rows, action.pos);
+        for (let i of openCellIdx) {
+          gameField.cells[i].state = "OPEN";
+        }
+        return {
+          ...state,
+          gameField,
+          remainingCells: state.remainingCells - (openCellIdx.length - 1),
+        };
       case "GAMECLEAR_EVENT":
         return { ...state, progress: "GAMECLEAR" };
       case "GAMEOVER_EVENT":
@@ -137,4 +148,32 @@ const initializeField = (level: Level): GameField => {
     }
   });
   return { numOfCells, rows, mines, cells };
+};
+
+const searchOpenSurroundingCells = (
+  cells: Cell[],
+  rows: number,
+  pos: number,
+  init: number[] = [pos]
+) => {
+  let canOpenCellIdx = init;
+  let surroundingCellsIdx: number[] = [];
+  const row = Math.floor(pos / rows);
+  const col = pos % rows;
+  if (col !== 0) surroundingCellsIdx.push(pos - 1);
+  if (col !== rows - 1) surroundingCellsIdx.push(pos + 1);
+  if (row !== 0) surroundingCellsIdx.push(pos - rows);
+  if (row !== rows - 1) surroundingCellsIdx.push(pos + rows);
+  if (col !== 0 && row !== 0) surroundingCellsIdx.push(pos - rows - 1);
+  if (col !== 0 && row !== rows - 1) surroundingCellsIdx.push(pos + rows - 1);
+  if (col !== rows - 1 && row !== 0) surroundingCellsIdx.push(pos - rows + 1);
+  if (col !== rows - 1 && row !== rows - 1) surroundingCellsIdx.push(pos + rows + 1);
+
+  for (let i of surroundingCellsIdx) {
+    if (cells[i].state === "CLOSE" && !canOpenCellIdx.includes(i)) {
+      canOpenCellIdx.push(i);
+      cells[i].value === 0 && searchOpenSurroundingCells(cells, rows, i, canOpenCellIdx);
+    }
+  }
+  return canOpenCellIdx;
 };
