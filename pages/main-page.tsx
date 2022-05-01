@@ -1,8 +1,10 @@
 import Layout from "../components/Layout";
 import Link from "next/link";
-import Cell from "../components/Cell";
 import GameField from "../components/GameField";
 import { useStateContext } from "../context/StateContextProvider";
+import Result from "../components/Result";
+import { useEffect } from "react";
+import { useInterval } from "../lib/useInterval";
 
 const MainPage: React.FC = () => {
   const {
@@ -10,9 +12,31 @@ const MainPage: React.FC = () => {
       flagMode,
       countFlag,
       gameField: { mines },
+      remainingCells,
+      progress,
+      time,
     },
     action,
   } = useStateContext();
+  const [timerState, timerControl] = useInterval({
+    interval: 1000,
+    autostart: false,
+    onUpdate: () => action({ type: "TIMER_COUNT_EVENT" }),
+  });
+  useEffect(() => {
+    if (remainingCells === mines && progress === "START") {
+      action({ type: "GAMECLEAR_EVENT" });
+    }
+  });
+  useEffect(() => {
+    if (timerState === "STOPPED" && progress === "START") {
+      timerControl.start();
+    }
+    if (timerState === "RUNNING" && progress !== "START") {
+      timerControl.stop();
+    }
+  });
+
   return (
     <Layout>
       <div className="fixed top-0 left-0 bg-gray-500 p-4 flex justify-between items-center w-full h-12">
@@ -25,11 +49,13 @@ const MainPage: React.FC = () => {
               {String(mines - countFlag).padStart(3, "0")}
             </span>
           </div>
-          <Cell />
+          <div
+            className="w-11 h-11 text-3xl flex justify-center items-center
+              bg-gray-300 border-4 border-l-gray-50 border-t-gray-50 border-r-gray-600 border-b-gray-600"
+            onClick={() => action({ type: "REFLESH_GAME_EVENT" })}
+          ></div>
           <div className="bg-black flex justify-center items-center w-16 h-11">
-            <span className="text-red-500 text-2xl">
-              {String(mines - countFlag).padStart(4, "0")}
-            </span>
+            <span className="text-red-500 text-2xl">{String(time).padStart(4, "0")}</span>
           </div>
         </div>
         <div
@@ -43,6 +69,7 @@ const MainPage: React.FC = () => {
           🚩
         </div>
       </div>
+      <Result />
       <div className="pt-20 pb-4">
         <GameField />
       </div>

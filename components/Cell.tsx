@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStateContext } from "../context/StateContextProvider";
 type Props = {
   content?: number;
@@ -28,6 +28,7 @@ const Cell: React.FC<Props> = ({ content }) => {
       flagMode,
       countFlag,
       gameField: { mines },
+      progress,
     },
     action,
   } = useStateContext();
@@ -49,9 +50,19 @@ const Cell: React.FC<Props> = ({ content }) => {
         action({ type: "COUNT_FLAG_EVENT", flag: false });
       } else if (!isOpen) {
         setIsOpen(true);
+        action({ type: "COUNT_CELL_EVENT" });
+        content === -1 && action({ type: "GAMEOVER_EVENT" });
       }
     }
   };
+  useEffect(() => {
+    if (progress === "READY") {
+      setIsOpen(false);
+      setFlag(false);
+    }
+    isOpen && progress === "READY" && action({ type: "GAMESTART_EVENT" });
+    progress === "GAMEOVER" && setIsOpen(true);
+  }, [progress, isOpen, action]);
 
   return (
     <div

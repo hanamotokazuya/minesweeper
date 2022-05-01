@@ -11,7 +11,7 @@ const Home: NextPage = () => {
       <Link href="/main-page">
         <a
           className="text-2xl text-white mb-10 hover:text-red-400"
-          onClick={() => action({ type: "REFLESH_GAME_FIELD_EVENT" })}
+          onClick={() => action({ type: "REFLESH_GAME_EVENT" })}
         >
           Start
         </a>

@@ -1,4 +1,4 @@
-import { useContext, useState, createContext, SetStateAction, useReducer } from "react";
+import { useContext, createContext, useReducer } from "react";
 import { Level, Cell, GameField, State, Action } from "../types/state";
 import { randomIntArrayNoDuplication } from "../lib/utils";
 
@@ -16,17 +16,41 @@ const StateContext = createContext(
 export const StateContextProvider: React.FC<Props> = ({ children }) => {
   const events = (state: State, action: Action): State => {
     let countFlag = state.countFlag;
+    let gameField: GameField;
     switch (action.type) {
       case "CHANGE_LEVEL_EVENT":
         return { ...state, level: action.level };
-      case "REFLESH_GAME_FIELD_EVENT":
-        return { ...state, gameField: initializeField(state.level), countFlag: 0, flagMode: false };
+      case "REFLESH_GAME_EVENT":
+        gameField = initializeField(state.level);
+        return {
+          ...state,
+          gameField,
+          countFlag: 0,
+          flagMode: false,
+          remainingCells: gameField.numOfCells,
+          progress: "READY",
+          time: 0,
+        };
       case "SWITCH_FLAG_MODE_EVENT":
         return { ...state, flagMode: !state.flagMode };
       case "COUNT_FLAG_EVENT":
         const flag = action.flag ? 1 : -1;
         countFlag += flag;
         return { ...state, countFlag };
+      case "COUNT_CELL_EVENT":
+        if (state.remainingCells > state.gameField.mines) {
+          return { ...state, remainingCells: state.remainingCells - 1 };
+        }
+      case "GAMECLEAR_EVENT":
+        return { ...state, progress: "GAMECLEAR" };
+      case "GAMEOVER_EVENT":
+        return { ...state, progress: "GAMEOVER" };
+      case "GAMESTART_EVENT":
+        return { ...state, progress: "START" };
+      case "GAMERESULT_EVENT":
+        return { ...state, progress: "RESULT" };
+      case "TIMER_COUNT_EVENT":
+        return { ...state, time: state.time + 1 };
       default:
         return state;
     }
@@ -36,6 +60,9 @@ export const StateContextProvider: React.FC<Props> = ({ children }) => {
     flagMode: false,
     gameField: initializeField("Easy"),
     countFlag: 0,
+    remainingCells: 81,
+    progress: "READY",
+    time: 0,
   };
   const [state, action] = useReducer(events, initialState);
   return <StateContext.Provider value={{ state, action }}>{children}</StateContext.Provider>;
