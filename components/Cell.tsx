@@ -22,11 +22,14 @@ const Cell: React.FC<Props> = ({ idx, cell }) => {
   } = useStateContext();
 
   const handleClickCell = () => {
-    progress === "READY" && action({ type: "GAMESTART_EVENT" });
-    action({ type: "CHANGE_CELL_STATE_EVENT", idx });
-    if (!flagMode && cell.state === "CLOSE") {
-      cell.value === 0 && action({ type: "OPEN_SURROUNDING_CELLS_EVENT", pos: idx });
-      cell.value === -1 && action({ type: "GAMEOVER_EVENT" });
+    if (progress === "READY") {
+      action({ type: "GAMESTART_EVENT", pos: idx });
+    } else if (progress === "START") {
+      action({ type: "CHANGE_CELL_STATE_EVENT", idx });
+      if (!flagMode && cell.state === "CLOSE") {
+        cell.value === 0 && action({ type: "OPEN_SURROUNDING_CELLS_EVENT", pos: idx });
+        cell.value === -1 && action({ type: "GAMEOVER_EVENT" });
+      }
     }
   };
 

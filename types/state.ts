@@ -68,6 +68,7 @@ type GAMEOVER_EVENT = {
 };
 type GAMESTART_EVENT = {
   type: "GAMESTART_EVENT";
+  pos: number;
 };
 type GAMERESULT_EVENT = {
   type: "GAMERESULT_EVENT";
