@@ -73,7 +73,7 @@ const MainPage: React.FC = () => {
         </div>
       </div>
       <Result />
-      <div className="pt-20 pb-4">
+      <div className="pt-10 flex justify-center">
         <GameField />
       </div>
     </Layout>
