@@ -12,7 +12,7 @@ const GameField: React.FC = () => {
   if (level === "Hard") gridPattern = "grid-cols-32";
 
   return (
-    <div className={`w-screen overflow-x-scroll scrollbar-hide grid ${gridPattern} p-10`}>
+    <div className={`overflow-x-scroll scrollbar-hide grid ${gridPattern} p-10`}>
       {cells.map((cell, idx) => (
         <Cell key={idx} idx={idx} cell={cell} />
       ))}
