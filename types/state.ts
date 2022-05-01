@@ -1,7 +1,10 @@
 export type Level = "Easy" | "Normal" | "Hard";
 
-export type Cell = number;
-
+export type CellState = "CLOSE" | "OPEN" | "FLAG";
+export type Cell = {
+  value: number;
+  state: CellState;
+};
 export type GameField = {
   numOfCells: number;
   rows: number;
@@ -22,6 +25,7 @@ export type Action =
   | CHANGE_LEVEL_EVENT
   | SWTICH_FLAG_MODE_EVENT
   | REFLESH_GAME_EVENT
+  | CHANGE_CELL_STATE_EVENT
   | COUNT_FLAG_EVENT
   | COUNT_CELL_EVENT
   | GAMECLEAR_EVENT
@@ -39,6 +43,10 @@ type SWTICH_FLAG_MODE_EVENT = {
 };
 type REFLESH_GAME_EVENT = {
   type: "REFLESH_GAME_EVENT";
+};
+type CHANGE_CELL_STATE_EVENT = {
+  type: "CHANGE_CELL_STATE_EVENT";
+  idx: number;
 };
 type COUNT_FLAG_EVENT = {
   type: "COUNT_FLAG_EVENT";

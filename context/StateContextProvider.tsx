@@ -1,6 +1,7 @@
 import { useContext, createContext, useReducer } from "react";
-import { Level, Cell, GameField, State, Action } from "../types/state";
+import { Level, Cell, GameField, State, Action, CellState } from "../types/state";
 import { randomIntArrayNoDuplication } from "../lib/utils";
+import _ from "lodash";
 
 interface Props {
   children: React.ReactNode;
@@ -15,7 +16,6 @@ const StateContext = createContext(
 
 export const StateContextProvider: React.FC<Props> = ({ children }) => {
   const events = (state: State, action: Action): State => {
-    let countFlag = state.countFlag;
     let gameField: GameField;
     switch (action.type) {
       case "CHANGE_LEVEL_EVENT":
@@ -33,14 +33,24 @@ export const StateContextProvider: React.FC<Props> = ({ children }) => {
         };
       case "SWITCH_FLAG_MODE_EVENT":
         return { ...state, flagMode: !state.flagMode };
-      case "COUNT_FLAG_EVENT":
-        const flag = action.flag ? 1 : -1;
-        countFlag += flag;
-        return { ...state, countFlag };
-      case "COUNT_CELL_EVENT":
-        if (state.remainingCells > state.gameField.mines) {
-          return { ...state, remainingCells: state.remainingCells - 1 };
+      case "CHANGE_CELL_STATE_EVENT":
+        gameField = _.cloneDeep(state.gameField);
+        const cellState = state.gameField.cells[action.idx].state;
+        let countFlag = state.countFlag;
+        let remainingCells = state.remainingCells;
+        let newCellState = gameField.cells[action.idx].state;
+        if (cellState === "CLOSE" && state.flagMode && state.countFlag < gameField.mines) {
+          newCellState = "FLAG";
+          countFlag += 1;
+        } else if (cellState === "FLAG") {
+          newCellState = "CLOSE";
+          countFlag -= 1;
+        } else if (cellState === "CLOSE" && !state.flagMode) {
+          newCellState = "OPEN";
+          remainingCells -= 1;
         }
+        gameField.cells[action.idx].state = newCellState;
+        return { ...state, gameField, countFlag, remainingCells };
       case "GAMECLEAR_EVENT":
         return { ...state, progress: "GAMECLEAR" };
       case "GAMEOVER_EVENT":
@@ -48,7 +58,11 @@ export const StateContextProvider: React.FC<Props> = ({ children }) => {
       case "GAMESTART_EVENT":
         return { ...state, progress: "START" };
       case "GAMERESULT_EVENT":
-        return { ...state, progress: "RESULT" };
+        gameField = _.cloneDeep(state.gameField);
+        gameField.cells.forEach((_, i) => {
+          gameField.cells[i].state = "OPEN";
+        });
+        return { ...state, gameField, progress: "RESULT" };
       case "TIMER_COUNT_EVENT":
         return { ...state, time: state.time + 1 };
       default:
@@ -91,35 +105,35 @@ const initializeField = (level: Level): GameField => {
       mines = 10;
   }
   const numOfCells = rows * rows;
-  let cells = new Array<Cell>(numOfCells).fill(0);
+  let cells = new Array(numOfCells).fill(null).map((e): Cell => ({ value: 0, state: "CLOSE" }));
   const minesPosition = randomIntArrayNoDuplication(numOfCells, mines);
   minesPosition.forEach((pos) => {
     let row = Math.floor(pos / rows);
     let col = pos % rows;
-    cells[pos] = -1;
-    if (col !== 0 && cells[pos - 1] !== -1) {
-      cells[pos - 1] += 1;
+    cells[pos].value = -1;
+    if (col !== 0 && cells[pos - 1].value !== -1) {
+      cells[pos - 1].value += 1;
     }
-    if (col !== rows - 1 && cells[pos + 1] !== -1) {
-      cells[pos + 1] += 1;
+    if (col !== rows - 1 && cells[pos + 1].value !== -1) {
+      cells[pos + 1].value += 1;
     }
-    if (row !== 0 && cells[pos - rows] !== -1) {
-      cells[pos - rows] += 1;
+    if (row !== 0 && cells[pos - rows].value !== -1) {
+      cells[pos - rows].value += 1;
     }
-    if (row !== 0 && col !== 0 && cells[pos - rows - 1] !== -1) {
-      cells[pos - rows - 1] += 1;
+    if (row !== 0 && col !== 0 && cells[pos - rows - 1].value !== -1) {
+      cells[pos - rows - 1].value += 1;
     }
-    if (row !== 0 && col !== rows - 1 && cells[pos - rows + 1] !== -1) {
-      cells[pos - rows + 1] += 1;
+    if (row !== 0 && col !== rows - 1 && cells[pos - rows + 1].value !== -1) {
+      cells[pos - rows + 1].value += 1;
     }
-    if (row !== rows - 1 && cells[pos + rows] !== -1) {
-      cells[pos + rows] += 1;
+    if (row !== rows - 1 && cells[pos + rows].value !== -1) {
+      cells[pos + rows].value += 1;
     }
-    if (row !== rows - 1 && col !== 0 && cells[pos + rows - 1] !== -1) {
-      cells[pos + rows - 1] += 1;
+    if (row !== rows - 1 && col !== 0 && cells[pos + rows - 1].value !== -1) {
+      cells[pos + rows - 1].value += 1;
     }
-    if (row !== rows - 1 && col !== rows - 1 && cells[pos + rows + 1] !== -1) {
-      cells[pos + rows + 1] += 1;
+    if (row !== rows - 1 && col !== rows - 1 && cells[pos + rows + 1].value !== -1) {
+      cells[pos + rows + 1].value += 1;
     }
   });
   return { numOfCells, rows, mines, cells };

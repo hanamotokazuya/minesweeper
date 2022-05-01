@@ -13,8 +13,8 @@ const GameField: React.FC = () => {
 
   return (
     <div className={`grid ${gridPattern} mt-1`}>
-      {cells.map((cell, key) => (
-        <Cell key={key} content={cell} />
+      {cells.map((cell, idx) => (
+        <Cell key={idx} idx={idx} cell={cell} />
       ))}
     </div>
   );
