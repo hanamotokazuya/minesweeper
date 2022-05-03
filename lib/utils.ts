@@ -1,5 +1,7 @@
-export const range = (begin: number, end: number) =>
-  [...Array(end - begin)].map((_, i) => begin + i);
+export const range = (begin: number, end: number) => {
+  if (begin > end) throw new Error("begin is bigger than end");
+  return [...Array(end - begin)].map((_, i) => begin + i);
+};
 
 export const randomIntArrayNoDuplication = (
   maxInt: number,

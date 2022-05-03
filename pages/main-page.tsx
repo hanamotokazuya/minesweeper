@@ -51,7 +51,9 @@ const MainPage: React.FC = () => {
     <Layout>
       <div className="fixed top-0 left-0 bg-gray-500 p-4 flex justify-between items-center w-full h-13 z-10">
         <Link href="/">
-          <a className="text-2xl text-green-400 font-bold w-20">Menu</a>
+          <a className="text-2xl text-green-400 font-bold w-20" data-testid="back-link">
+            Menu
+          </a>
         </Link>
         <div className="flex gap-2">
           <div className="bg-black flex justify-center items-center w-16 h-11">

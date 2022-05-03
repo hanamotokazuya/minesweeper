@@ -10,7 +10,9 @@ const SettingPage: React.FC = () => {
   return (
     <Layout>
       <Link href="/">
-        <a className="text-3xl text-red-600 ml-10 mr-auto mb-10 pt-20">Back</a>
+        <a className="text-3xl text-red-600 ml-10 mr-auto mb-10 pt-20" data-testid="back-link">
+          Back
+        </a>
       </Link>
       <h2 className="text-2xl text-green-400 mb-10">Game Level</h2>
       <button

@@ -11,16 +11,21 @@ const Home: NextPage = () => {
       <Link href="/main-page">
         <a
           className="text-2xl text-white mb-10 hover:text-red-400"
+          data-testid="start-link"
           onClick={() => action({ type: "REFLESH_GAME_EVENT" })}
         >
           Start
         </a>
       </Link>
       <Link href="/setting-page">
-        <a className="text-2xl text-white mb-10 hover:text-red-400">Setting</a>
+        <a className="text-2xl text-white mb-10 hover:text-red-400" data-testid="setting-link">
+          Setting
+        </a>
       </Link>
       <Link href="/help-page">
-        <a className="text-2xl text-white mb-10 hover:text-red-400">Help</a>
+        <a className="text-2xl text-white mb-10 hover:text-red-400" data-testid="help-link">
+          Help
+        </a>
       </Link>
     </Layout>
   );
