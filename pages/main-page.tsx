@@ -20,6 +20,7 @@ const MainPage: React.FC = () => {
     },
     action,
   } = useStateContext();
+  // ショートカットキーの割り当て
   useHotkeys("a", () => action({ type: "SWITCH_FLAG_MODE_EVENT" }));
   useHotkeys("ctrl+c", () => action({ type: "REFLESH_GAME_EVENT" }));
   const [timerState, timerControl] = useInterval({
@@ -29,19 +30,21 @@ const MainPage: React.FC = () => {
   });
   const [faceImage, setFaceImage] = useState("/niconico.png");
   useEffect(() => {
+    // ゲームクリア条件
     if (remainingCells === mines && progress === "START") {
       action({ type: "GAMECLEAR_EVENT" });
     }
-  });
-  useEffect(() => {
+    // タイマースタート条件
     if (timerState === "STOPPED" && progress === "START") {
       timerControl.start();
     }
+    // タイマーストップ条件
     if (timerState === "RUNNING" && progress !== "START") {
       timerControl.stop();
     }
   });
   useEffect(() => {
+    // faceイメージ切り替え条件
     if (progress === "READY") setFaceImage("/niconico.png");
     else if (progress === "GAMECLEAR") setFaceImage("/glass.png");
     else if (progress === "GAMEOVER") setFaceImage("/puapua.png");

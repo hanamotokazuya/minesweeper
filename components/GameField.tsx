@@ -1,6 +1,9 @@
 import { useStateContext } from "../context/StateContextProvider";
 import Cell from "../components/Cell";
 
+/**
+ * ゲーム盤を表示するコンポーネント
+ */
 const GameField: React.FC = () => {
   const {
     state: { level, gameField },

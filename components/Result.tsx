@@ -1,5 +1,8 @@
 import { useStateContext } from "../context/StateContextProvider";
 
+/**
+ * ゲームクリア画面およびゲームオーバー画面を表示するコンポーネント
+ */
 const Result: React.FC = () => {
   const {
     state: { progress, time },

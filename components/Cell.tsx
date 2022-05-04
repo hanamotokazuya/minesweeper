@@ -4,7 +4,10 @@ type Props = {
   idx: number;
   cell: Cell;
 };
-
+/**
+ * セル単体を生成するコンポーネント
+ * @param {`{ idx, cell }` }
+ */
 const Cell: React.FC<Props> = ({ idx, cell }) => {
   let contentStyle = "";
   if (cell.value === 1) contentStyle = "text-blue-700";
@@ -40,15 +43,20 @@ const Cell: React.FC<Props> = ({ idx, cell }) => {
           ? "bg-gray-400 border-gray-600 border"
           : "bg-gray-300 border-4 border-l-gray-50 border-t-gray-50 border-r-gray-600 border-b-gray-600"
       }`}
+      data-testid={`cell-${idx}`}
       onClick={handleClickCell}
     >
-      <div className={`${cell.state === "FLAG" ? "flex justify-center items-center" : "hidden"}`}>
+      <div
+        className={`${cell.state === "FLAG" ? "flex justify-center items-center" : "hidden"}`}
+        data-testid={`cell-flag-${idx}`}
+      >
         🚩
       </div>
       <div
         className={`w-full h-full ${
           cell.state === "OPEN" ? "flex justify-center items-center" : "hidden"
         } font-black`}
+        data-testid={`cell-value-${idx}`}
       >
         {(() => {
           if (cell.value === 0) {
