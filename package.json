@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch"
+    "test": "jest --env=jsdom --verbose",
+    "watch": "jest --watch"
   },
   "dependencies": {
     "@testing-library/user-event": "^14.1.1",
