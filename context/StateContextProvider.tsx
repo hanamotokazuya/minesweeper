@@ -126,7 +126,7 @@ export const useStateContext = () => useContext(StateContext);
  * @param level ゲームレベル("Easy" or "Normal" or "Hard")
  * @returns `{numOfCells, rows, mines, cells}`
  */
-const initializeField = (level: Level): GameField => {
+export const initializeField = (level: Level): GameField => {
   let rows: number;
   let mines: number;
   // ゲーム盤の行数と地雷数を定義
@@ -161,7 +161,7 @@ const initializeField = (level: Level): GameField => {
  * @param initPos ゲーム開始位置
  * @returns `{ numOfCells, rows, mines, cells }`
  */
-const setGameField = (initGameField: GameField, initPos: number): GameField => {
+export const setGameField = (initGameField: GameField, initPos: number): GameField => {
   const gameField = _.cloneDeep(initGameField);
   const numOfCells = gameField.numOfCells;
   const mines = gameField.mines;
@@ -190,7 +190,7 @@ const setGameField = (initGameField: GameField, initPos: number): GameField => {
  * @param init 展開可能セルの初期値
  * @returns 展開可能なセルのインデックス配列
  */
-const searchOpenSurroundingCells = (
+export const searchOpenSurroundingCells = (
   cells: Cell[],
   rows: number,
   pos: number,
@@ -220,7 +220,11 @@ const searchOpenSurroundingCells = (
  * @param includeSelf 戻り値に起点のセルインデックスを含めるかどうかのオプション
  * @returns 周辺のセルインデックス配列
  */
-const searchSurroundingCellIdx = (pos: number, rows: number, includeSelf = false): number[] => {
+export const searchSurroundingCellIdx = (
+  pos: number,
+  rows: number,
+  includeSelf = false
+): number[] => {
   let surroundingCellsIdx: number[] = [];
   const row = Math.floor(pos / rows);
   const col = pos % rows;

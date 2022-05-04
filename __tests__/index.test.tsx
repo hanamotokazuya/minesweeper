@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { getPage } from "next-page-tester";
 import { initTestHelpers } from "next-page-tester";
 import userEvent from "@testing-library/user-event";
@@ -18,17 +18,15 @@ describe("Navigation by Link", () => {
     });
     render(page);
 
-    await waitFor(async () => {
-      userEvent.click(screen.getByTestId("start-link"));
-      expect(await screen.findByText("Menu")).toBeInTheDocument();
-      userEvent.click(screen.getByTestId("back-link"));
-      expect(await screen.findByText("Minesweeper")).toBeInTheDocument();
-      userEvent.click(screen.getByTestId("setting-link"));
-      expect(await screen.findByText("Game Level")).toBeInTheDocument();
-      userEvent.click(screen.getByTestId("back-link"));
-      expect(await screen.findByText("Minesweeper")).toBeInTheDocument();
-      userEvent.click(screen.getByTestId("help-link"));
-      expect(await screen.findByText("遊び方")).toBeInTheDocument();
-    });
+    await userEvent.click(screen.getByTestId("start-link"));
+    expect(await screen.findByText("Menu")).toBeInTheDocument();
+    await userEvent.click(screen.getByTestId("back-link"));
+    expect(await screen.findByText("Minesweeper")).toBeInTheDocument();
+    await userEvent.click(screen.getByTestId("setting-link"));
+    expect(await screen.findByText("Game Level")).toBeInTheDocument();
+    await userEvent.click(screen.getByTestId("back-link"));
+    expect(await screen.findByText("Minesweeper")).toBeInTheDocument();
+    await userEvent.click(screen.getByTestId("help-link"));
+    expect(await screen.findByText("遊び方")).toBeInTheDocument();
   });
 });
