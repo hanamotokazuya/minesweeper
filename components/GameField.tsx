@@ -1,13 +1,11 @@
-import { useStateContext } from "../context/StateContextProvider";
+import { useGameSelector } from "redux/game";
 import Cell from "../components/Cell";
 
 /**
  * ゲーム盤を表示するコンポーネント
  */
 const GameField: React.FC = () => {
-  const {
-    state: { level, gameField },
-  } = useStateContext();
+  const { level, gameField } = useGameSelector();
   const cells = gameField.cells;
   let gridPattern = "grid-cols-9";
   if (level === "Easy") gridPattern = "grid-cols-9 w-[396px]";

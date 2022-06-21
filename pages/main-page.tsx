@@ -2,37 +2,46 @@ import Layout from "../components/Layout";
 import Image from "next/image";
 import Link from "next/link";
 import GameField from "../components/GameField";
-import { useStateContext } from "../context/StateContextProvider";
 import Result from "../components/Result";
 import { useEffect, useState } from "react";
 import { useInterval } from "../lib/useInterval";
 import { useHotkeys } from "react-hotkeys-hook";
+import {
+  gameClearAction,
+  refleshGameAction,
+  switchFlagModeAction,
+  timerCountAction,
+  useGameSelector,
+} from "redux/game";
+import { useAppDispatch } from "redux/stores/store";
 
 const MainPage: React.FC = () => {
   const {
-    state: {
-      flagMode,
-      countFlag,
-      gameField: { mines },
-      remainingCells,
-      progress,
-      time,
-    },
-    action,
-  } = useStateContext();
+    flagMode,
+    countFlag,
+    gameField: { mines },
+    remainingCells,
+    progress,
+    time,
+  } = useGameSelector();
+  const dispatch = useAppDispatch();
   // ショートカットキーの割り当て
-  useHotkeys("a", () => action({ type: "SWITCH_FLAG_MODE_EVENT" }));
-  useHotkeys("ctrl+c", () => action({ type: "REFLESH_GAME_EVENT" }));
+  useHotkeys("a", () => {
+    dispatch(switchFlagModeAction());
+  });
+  useHotkeys("ctrl+c", () => {
+    dispatch(refleshGameAction());
+  });
   const [timerState, timerControl] = useInterval({
     interval: 1000,
     autostart: false,
-    onUpdate: () => action({ type: "TIMER_COUNT_EVENT" }),
+    onUpdate: () => dispatch(timerCountAction()),
   });
   const [faceImage, setFaceImage] = useState("/niconico.png");
   useEffect(() => {
     // ゲームクリア条件
     if (remainingCells === mines && progress === "START") {
-      action({ type: "GAMECLEAR_EVENT" });
+      dispatch(gameClearAction());
     }
     // タイマースタート条件
     if (timerState === "STOPPED" && progress === "START") {
@@ -67,7 +76,7 @@ const MainPage: React.FC = () => {
           <div
             className="w-11 h-11 text-3xl flex justify-center items-center
               bg-gray-300 border-4 border-l-gray-50 border-t-gray-50 border-r-gray-600 border-b-gray-600"
-            onClick={() => action({ type: "REFLESH_GAME_EVENT" })}
+            onClick={() => dispatch(refleshGameAction())}
           >
             <Image src={faceImage} alt="face" width={44} height={44} />
           </div>
@@ -82,7 +91,7 @@ const MainPage: React.FC = () => {
                 ? "bg-gray-400 border-gray-600 border"
                 : "bg-gray-300 border-4 border-l-gray-50 border-t-gray-50 border-r-gray-600 border-b-gray-600"
             }`}
-            onClick={() => action({ type: "SWITCH_FLAG_MODE_EVENT" })}
+            onClick={() => dispatch(switchFlagModeAction())}
           >
             🚩
           </div>

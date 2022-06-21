@@ -1,4 +1,11 @@
-import { useStateContext } from "../context/StateContextProvider";
+import {
+  changeCellStateAction,
+  gameOverAction,
+  gameStartAction,
+  openSurroundingCellsAction,
+  useGameSelector,
+} from "redux/game";
+import { useAppDispatch } from "redux/stores/store";
 import { Cell } from "../types/state";
 type Props = {
   idx: number;
@@ -19,19 +26,17 @@ const Cell: React.FC<Props> = ({ idx, cell }) => {
   else if (cell.value === 7) contentStyle = "text-pink-700";
   else if (cell.value === 8) contentStyle = "text-stone-700";
 
-  const {
-    state: { flagMode, progress },
-    action,
-  } = useStateContext();
+  const { flagMode, progress } = useGameSelector();
+  const dispatch = useAppDispatch();
 
   const handleClickCell = () => {
     if (progress === "READY") {
-      action({ type: "GAMESTART_EVENT", pos: idx });
+      dispatch(gameStartAction(idx));
     } else if (progress === "START") {
-      action({ type: "CHANGE_CELL_STATE_EVENT", idx });
+      dispatch(changeCellStateAction(idx));
       if (!flagMode && cell.state === "CLOSE") {
-        cell.value === 0 && action({ type: "OPEN_SURROUNDING_CELLS_EVENT", pos: idx });
-        cell.value === -1 && action({ type: "GAMEOVER_EVENT" });
+        cell.value === 0 && dispatch(openSurroundingCellsAction(idx));
+        cell.value === -1 && dispatch(gameOverAction());
       }
     }
   };
